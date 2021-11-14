@@ -1,0 +1,55 @@
+
+------------ A. Indicar el nombre de los medicamentos consumidos durante el 2019 de mayor precio unitario -------------------------------
+
+SELECT M.NOMBREMEDICAMENTO
+FROM MEDICAMENTO M
+	INNER JOIN CONSUMO_AFILIADO CA ON M.IDMEDICAMENTO = CA.IDMEDICAMENTO 
+WHERE CA.PRECIOUNITARIO = (
+		SELECT MAX(PRECIOUNITARIO)
+		FROM CONSUMO_AFILIADO
+	)
+	AND AÑO(CA.FECHAHORACONSUMO) = 2019
+
+
+------------ B. Indicar el id de las localidades de las farmacias donde afiliados mayores de 50 años consumieron el medicamento “AMOXIDAL” durante el año 2020. 
+
+SELECT F.IDLOCALIDAD 
+FROM CONSUMO_AFILIADO CA
+	INNER JOIN AFILIADO A ON CA.IDAFILIADO = A.IDAFILIADO
+	INNER JOIN MEDICAMENTO M ON CA.IDMEDICAMENTO = M.IDMEDICAMENTO
+	INNER JOIN FARMACIA F ON CA.IDFARMACIA = F.IDFARMACIA
+WHERE EDAD(A.FECHANACIMIENTO) > 50
+	AND M.NOMBREMEDICAMENTO = "AMOXIDAL"
+	AND AÑO(CA.FECHAHORACONSUMO) = 2020
+
+
+------------ C. Encontrar el precio más bajo para el 2019 de cada medicamento, para aquellos que hayan sufrido más de 7 cambios de precio durante ese año. 
+
+SELECT IDMEDICAMENTO, MIN(PRECIOUNITARIO) AS MIN_PRECIO
+FROM PRECIO_MEDICAMENTO PM
+	INNER JOIN 
+(
+	SELECT IDMEDICAMENTO, COUNT(*) TIMES
+	FROM PRECIO_MEDICAMENTO PM
+	WHERE AÑO(PM.FECHAPRECIO) = 2019
+	GROUP BY IDMEDICAMENTO
+	HAVING TIMES > 7
+ ) T ON PM.IDMEDICAMENTO = T.IDMEDICAMENTO
+
+
+------------ D. Hallar el nombre de las farmacias que hayan vendido algún medicamento y que sean las de menor antigüedad (respecto a su fecha de apertura), dentro de las farmacias que pertenecen a su misma  localidad.
+
+SELECT F.NOMBREFARMACIA
+FROM CONSUMO_AFILIADO CA
+	INNER JOIN FARMACIA F ON CA.IDFARMACIA = F.IDFARMACIA
+	INNER JOIN (
+		SELECT IDLOCALIDAD, MIN(EDAD(FECHAAPERTURA)) MEF
+		FROM FARMACIA
+		GROUP BY 1
+	) T ON F.IDLOCALIDAD = T.IDLOCALIDAD AND EDAD(F.FECHAAPERTURA) = T.MEF
+
+
+
+
+
+

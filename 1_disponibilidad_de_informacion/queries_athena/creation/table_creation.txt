@@ -1,0 +1,19 @@
+CREATE EXTERNAL TABLE IF NOT EXISTS `angel_test`.`goods_data` (
+  `activo` string COMMENT 'from deserializer',
+  `fecha_inicial` string COMMENT 'from deserializer',
+  `fecha_final` string COMMENT 'from deserializer',
+  `latitud` string COMMENT 'from deserializer',
+  `longitud` string COMMENT 'from deserializer',
+  `valorventa` string COMMENT 'from deserializer',
+  `valorarriendo` string COMMENT 'from deserializer',
+  `data` string COMMENT 'from deserializer',
+  `id` string COMMENT 'from deserializer'
+)
+ROW FORMAT SERDE 
+  'org.openx.data.jsonserde.JsonSerDe' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION 's3://selection-process-angel-rodriguez/Files/'
+TBLPROPERTIES ('has_encrypted_data'='false');

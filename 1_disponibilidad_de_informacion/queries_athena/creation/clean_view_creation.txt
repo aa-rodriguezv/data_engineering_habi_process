@@ -1,0 +1,51 @@
+CREATE OR REPLACE VIEW goods_data_cleaned_vw AS 
+SELECT
+  ID
+, ACTIVO
+, FECHA_INICIAL
+, FECHA_FINAL
+, LAT
+, LNG
+, VALOR_VENTA
+, VALOR_ARRIENDO
+, (
+    CASE 
+        WHEN (ciudad LIKE 'Bog%') THEN 'Bogota'
+        WHEN (ciudad LIKE 'Cart%') THEN 'Cartagena'
+        WHEN (ciudad LIKE 'Dos%') THEN 'Dosquebradas'
+        WHEN (ciudad LIKE 'Ita%') THEN 'Itaguí'
+        WHEN (ciudad LIKE 'Jamu%') THEN 'Jamundí' 
+        WHEN (ciudad LIKE 'Medell%') THEN 'Medellín'
+        WHEN (ciudad LIKE 'Sopetr%n') THEN 'Sopetrón' 
+        WHEN (ciudad LIKE 'Sop%') THEN 'Sopó' 
+        WHEN (ciudad LIKE 'Ch%a') THEN 'Chía'
+        WHEN (ciudad LIKE 'C%cuta') THEN 'Cúcuta'
+        WHEN (ciudad LIKE 'Tocancip%') THEN 'Tocancipá'
+        WHEN (ciudad LIKE 'Cajic%') THEN 'Cajicá'
+        WHEN (ciudad LIKE 'Bol%var') THEN 'Bolívar'
+        WHEN (ciudad LIKE 'Monter%a') THEN 'Montería'
+        WHEN (ciudad LIKE 'Ibagu%') THEN 'Ibagué'
+        ELSE ciudad 
+    END
+    ) AS CIUDAD
+, NUM_BANOS
+, ANTIGUEDAD
+, AREA_LOTE
+FROM
+  (
+   SELECT
+     ID
+   , ACTIVO
+   , FECHA_INICIAL
+   , FECHA_FINAL
+   , LATITUD AS LAT
+   , LONGITUD AS LNG
+   , CAST((CASE WHEN VALORVENTA LIKE 'None' THEN NULL ELSE VALORVENTA END) AS decimal) AS VALOR_VENTA
+   , CAST((CASE WHEN VALORARRIENDO LIKE 'None' THEN NULL ELSE VALORARRIENDO END) AS decimal) AS VALOR_ARRIENDO
+   , CAST(COALESCE("json_extract"("replace"(data, '''', '"'), '$.ciudad'), "json_extract"("replace"(data, '''', '"'), '$.city')) AS varchar(12)) CIUDAD
+   , CAST("json_extract"("replace"(data, '''', '"'), '$.num_banos') AS int) NUM_BANOS
+   , CAST("json_extract"("replace"(data, '''', '"'), '$.antiguedad') AS int) ANTIGUEDAD
+   , CAST("json_extract"("replace"(data, '''', '"'), '$.area_lote') AS int) AREA_LOTE
+   FROM
+     "angel_test"."goods_data"
+)  TEMP
