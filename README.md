@@ -7,7 +7,7 @@ A continuación se explica la distribución de las carpetas para guardar la evid
 
 ### 1. Disponibilización de Los Datos
 
-dentro de la carpeta '/1_disponibilidad_de_informacion' se encuentra la resolución al primer ejercicio propuesto en la actividad. Para el cual se establecen 2 procesos (divididos en dos carpetas de nombres representativos). El proceso de ETL: que involucra la reescritura del archivo .json original a un archivo que pueda ser leído correctamente en Amazon Athena, después de ser cargado a un Bucket S3. Adicionalmente, se encuentran los queries que se utilizaron en Athena para poder crear talbas y las consultas que responden a las preguntas del negocio dispuestas en el documento. 
+dentro de la carpeta '/1_disponibilidad_de_informacion' se encuentra la resolución al primer ejercicio propuesto en la actividad. Para el cual se establecen 2 procesos (divididos en dos carpetas de nombres representativos). El proceso de ETL: que involucra la reescritura del archivo .json original a un archivo que pueda ser leído correctamente en Amazon Athena, después de ser cargado a un Bucket S3. Adicionalmente, se encuentran los queries que se utilizaron en Athena para poder crear talbas y las consultas que responden a las preguntas del negocio dispuestas en el documento (separados también en carpetas). 
 
 ### 2. Manejo de Base de Datos
 
